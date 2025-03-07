@@ -5,4 +5,8 @@ html, body, #app {
     padding: 0;
     width: 100%;
     overflow-x: hidden;
-  }
+}
+
+.bg-custom-gradient {
+  background: linear-gradient(90deg, #15017d, #68007b);
+}
