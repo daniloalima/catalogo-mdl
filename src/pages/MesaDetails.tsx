@@ -1,6 +1,6 @@
-// src/pages/MesaDetail.tsx
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import api from "../api/api";
 import { Mesa } from "../types/Mesa";
 
 const MesaDetail: React.FC = () => {
@@ -11,11 +11,10 @@ const MesaDetail: React.FC = () => {
   const isAdmin = localStorage.getItem("is_admin") === "true";
 
   useEffect(() => {
-    fetch(`http://localhost:8000/mesas/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
-          setMesa(data.mesa);
+    api.get(`/mesas/${id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setMesa(res.data.mesa);
         }
       })
       .catch((err) => {
@@ -27,18 +26,12 @@ const MesaDetail: React.FC = () => {
   }, [id]);
 
   const handleAddVaga = () => {
-    fetch(`http://localhost:8000/mesas/${id}/adiciona_vaga`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
+    api.post(`/mesas/${id}/adiciona_vaga`)
+      .then((res) => {
+        if (res.status === 200) {
           setMesa((prevMesa) => prevMesa ? { ...prevMesa, vagas: prevMesa.vagas + 1 } : prevMesa);
         } else {
-          console.error("Erro ao adicionar vaga:", data);
+          console.error("Erro ao adicionar vaga:", res.data);
         }
       })
       .catch((err) => {
@@ -47,18 +40,12 @@ const MesaDetail: React.FC = () => {
   };
 
   const handleRemoveVaga = () => {
-    fetch(`http://localhost:8000/mesas/${id}/remove_vaga`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
+    api.post(`/mesas/${id}/remove_vaga`)
+      .then((res) => {
+        if (res.status === 200) {
           setMesa((prevMesa) => prevMesa ? { ...prevMesa, vagas: prevMesa.vagas - 1 } : prevMesa);
         } else {
-          console.error("Erro ao remover vaga:", data);
+          console.error("Erro ao remover vaga:", res.data);
         }
       })
       .catch((err) => {
@@ -69,18 +56,12 @@ const MesaDetail: React.FC = () => {
   const handleDeleteMesa = () => {
     const confirmed = window.confirm("Tem certeza que deseja deletar esta mesa?");
     if (confirmed) {
-      fetch(`http://localhost:8000/mesas/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status === 200) {
+      api.delete(`/mesas/${id}`)
+        .then((res) => {
+          if (res.status === 200) {
             navigate("/catalog");
           } else {
-            console.error("Erro ao deletar mesa:", data);
+            console.error("Erro ao deletar mesa:", res.data);
           }
         })
         .catch((err) => {
@@ -106,7 +87,7 @@ const MesaDetail: React.FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-custom-gradient">
+    <div className="w-screen h-screen bg-gray-100">
       <div className="container mx-auto py-10">
         <Link to="/catalog" className="text-blue-500 mb-4 inline-block hover:underline">
           ← Voltar
@@ -130,26 +111,26 @@ const MesaDetail: React.FC = () => {
           <p className="mb-2 text-gray-700">
             <strong>Horário:</strong> {mesa.horario}
           </p>
-          <p className="mb-2 text-gray-700">
-            <strong>Vagas:</strong> {mesa.vagas}
-          </p>
           {isAdmin && (
             <>
-              <div className="mb-2 flex items-center">
+              <div className="mb-2 text-gray-700 flex items-center">
+                <strong>Vagas: </strong> {mesa.vagas}
                 <button
-                  className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                  className="ml-4 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                   onClick={handleAddVaga}
                 >
                   +
                 </button>
                 <button
-                  className="ml-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                  className="ml-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                   onClick={handleRemoveVaga}
                 >
                   -
                 </button>
+              </div>
+              <div className="mt-4">
                 <button
-                  className="ml-4 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                  className="bg-gray-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                   onClick={handleDeleteMesa}
                 >
                   🗑️

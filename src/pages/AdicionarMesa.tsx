@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 const AdicionarMesa: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -42,22 +43,15 @@ const AdicionarMesa: React.FC = () => {
       setErrors(validationErrors);
       return;
     }
-    fetch("http://localhost:8000/mesas", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 201) {
+    api.post("/mesas", formData)
+      .then((res: { status: number; data: any }) => {
+        if (res.status === 201) {
           navigate("/catalog");
         } else {
-          console.error("Erro ao adicionar mesa:", data);
+          console.error("Erro ao adicionar mesa:", res.data);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error("Erro ao adicionar mesa:", err);
       });
   };

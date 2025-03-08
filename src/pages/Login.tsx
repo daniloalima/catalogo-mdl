@@ -1,27 +1,31 @@
 // src/pages/Login.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiPost } from "../api/api";
+import api from "../api/api";
 import { LoginResponse } from "../types/LoginResponse";
 
 const Login: React.FC = () => {
-    const [usuario, setUsuario] = useState("");
-    const [senha, setSenha] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-      const { status, data, message } = await apiPost<LoginResponse>("/login", { usuario, senha });
-
-      if (status === 200 && data) {
-        localStorage.setItem("is_admin", data.is_admin ? "true" : "false");
+    try {
+      const res = await api.post<LoginResponse>("/login", { usuario, senha });
+      if (res.status === 200 && res.data) {
+        localStorage.setItem("is_admin", res.data.is_admin ? "true" : "false");
         navigate("/catalog");
       } else {
-        setError(message || "Credenciais inválidas. Tente novamente.");
+        setError("Credenciais inválidas. Tente novamente.");
       }
-    };
+    } catch (err) {
+      setError("Erro ao fazer login. Tente novamente.");
+      console.error("Erro ao fazer login:", err);
+    }
+  };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center text-gray-800 bg-custom-gradient">

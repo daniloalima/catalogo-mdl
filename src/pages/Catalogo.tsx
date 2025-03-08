@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MesaCard from "../components/MesaCard";
 import { Mesa } from "../types/Mesa";
+import api from "../api/api";
 
 const Catalogo: React.FC = () => {
   const [mesas, setMesas] = useState<Mesa[]>([]);
@@ -11,11 +12,10 @@ const Catalogo: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8000/mesas")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
-          setMesas(data.mesas);
+    api.get("/mesas")
+      .then((res) => {
+        if (res.status === 200) {
+          setMesas(res.data.mesas);
         }
       })
       .catch((err) => {
