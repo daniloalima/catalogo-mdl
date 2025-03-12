@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
 
-const AdicionarMesa: React.FC = () => {
+const EditarMesa: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState({
     name: "",
     mestre: "",
@@ -17,8 +18,23 @@ const AdicionarMesa: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    api.get(`/mesas/${id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setFormData(res.data.mesa);
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar detalhes da mesa:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -44,43 +60,45 @@ const AdicionarMesa: React.FC = () => {
       setErrors(validationErrors);
       return;
     }
-    api.post("/mesas", formData)
+    api.post(`/mesas/${id}`, formData)
       .then((res: { status: number; data: any }) => {
-        console.log(res);
-        if (res.data.status === 201) {
-          console.log("Mesa adicionada com sucesso:", res.data);
-          navigate(`/mesa/${res.data.mesa.id}`);
+        if (res.status === 200) {
+          navigate(`/mesa/${id}`);
         } else {
-          console.error("Erro ao adicionar mesa:", res.data);
+          console.error("Erro ao editar mesa:", res.data);
         }
       })
       .catch((err: any) => {
-        console.error("Erro ao adicionar mesa:", err);
+        console.error("Erro ao editar mesa:", err);
       });
   };
 
   const handleCancel = () => {
-    if (window.confirm("Tem certeza de que deseja descartar as informações?")) {
-      navigate("/catalog");
+    if (window.confirm("Tem certeza de que deseja descartar as alterações?")) {
+      navigate(`/mesa/${id}`);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-custom-gradient">
+        <p className="text-gray-700 text-2xl">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-screen min-h-screen bg-custom-gradient flex items-center justify-center p-4">
       <div className="absolute top-4 left-4">
-        <Link
-          to="/catalog"
-          onClick={(e) => {
-            e.preventDefault();
-            handleCancel();
-          }}
+        <button
+          onClick={handleCancel}
           className="text-blue-500 mb-4 inline-block hover:underline"
         >
-          ← Voltar ao Catálogo
-        </Link>
+          ← Voltar
+        </button>
       </div>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">Adicionar Mesa</h1>
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">Editar Mesa</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">Nome</label>
@@ -212,7 +230,7 @@ const AdicionarMesa: React.FC = () => {
             type="submit"
             className="w-full bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
-            Adicionar Mesa
+            Salvar Alterações
           </button>
         </form>
       </div>
@@ -220,4 +238,4 @@ const AdicionarMesa: React.FC = () => {
   );
 };
 
-export default AdicionarMesa;
+export default EditarMesa;
