@@ -12,7 +12,8 @@ const AdicionarMesa: React.FC = () => {
     horario: "",
     descricao: "",
     image_url: "",
-    sessoes_mes: 2 // Valor padrão
+    sessoes_mes: 2, // Valor padrão
+    mesa_especial: false // Valor padrão
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -21,7 +22,7 @@ const AdicionarMesa: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === "sessoes_mes" ? parseInt(value) : value });
+    setFormData({ ...formData, [name]: name === "sessoes_mes" ? parseInt(value) : name === "mesa_especial" ? value === "true" : value });
   };
 
   const validate = () => {
@@ -45,8 +46,10 @@ const AdicionarMesa: React.FC = () => {
     }
     api.post("/mesas", formData)
       .then((res: { status: number; data: any }) => {
-        if (res.status === 201) {
-          navigate("/catalog");
+        console.log(res);
+        if (res.data.status === 201) {
+          console.log("Mesa adicionada com sucesso:", res.data);
+          navigate(`/mesa/${res.data.mesa.id}`);
         } else {
           console.error("Erro ao adicionar mesa:", res.data);
         }
@@ -173,6 +176,19 @@ const AdicionarMesa: React.FC = () => {
               <option value={4}>4</option>
             </select>
             {errors.sessoes_mes && <p className="text-red-500 text-sm">{errors.sessoes_mes}</p>}
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Mesa Especial</label>
+            <select
+              name="mesa_especial"
+              value={formData.mesa_especial ? "true" : "false"}
+              onChange={handleChange}
+              className="w-full border border-gray-300 text-gray-800 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+              required
+            >
+              <option value="false">Não</option>
+              <option value="true">Sim</option>
+            </select>
           </div>
           <button
             type="submit"

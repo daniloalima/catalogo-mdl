@@ -10,4 +10,5 @@ export interface Mesa {
     vagas: number;
     image_url?: string;
     sessoes_mes: number;
+    mesa_especial: boolean;
   }

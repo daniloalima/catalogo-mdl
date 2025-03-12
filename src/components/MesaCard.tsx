@@ -10,12 +10,26 @@ interface MesaCardProps {
   horario: string;
   imagem: string;
   vagas: number;
+  mesa_especial: boolean;
 }
 
-const MesaCard: React.FC<MesaCardProps> = ({ id, nome, sistema, dia, horario, imagem, vagas }) => {
+const MesaCard: React.FC<MesaCardProps> = ({
+  id,
+  nome,
+  sistema,
+  dia,
+  horario,
+  vagas,
+  imagem,
+  mesa_especial,
+}) => {
   return (
     <Link to={`/mesa/${id}`}>
-      <div className="bg-white rounded-lg overflow-hidden shadow-lg m-4 transform transition duration-500 hover:scale-105 hover:shadow-2xl animate-fadeIn">
+      <div
+        className={`bg-white rounded-lg overflow-hidden shadow-lg m-4 transform transition duration-500 hover:scale-105 hover:shadow-2xl animate-fadeIn ${
+          mesa_especial ? "border-yellow-500 animate-border" : "border-gray-300"
+        }`}
+      >
         <img
           src={imagem}
           alt={`Imagem da mesa ${nome}`}

@@ -87,7 +87,7 @@ const MesaDetail: React.FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-gray-100">
+    <div className="w-screen h-screen bg-gray-100 bg-custom-gradient">
       <div className="container mx-auto py-10">
         <Link to="/catalog" className="text-blue-500 mb-4 inline-block hover:underline">
           ← Voltar

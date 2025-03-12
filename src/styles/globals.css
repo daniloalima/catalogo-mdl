@@ -10,3 +10,19 @@ html, body, #app {
 .bg-custom-gradient {
   background: linear-gradient(90deg, #15017d, #68007b);
 }
+
+@keyframes borderAnimation {
+  0% {
+    border-color: yellow;
+  }
+  50% {
+    border-color: orange;
+  }
+  100% {
+    border-color: yellow;
+  }
+}
+
+.animate-border {
+  animation: borderAnimation 2s infinite;
+}
