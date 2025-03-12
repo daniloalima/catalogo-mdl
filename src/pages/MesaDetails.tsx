@@ -181,9 +181,6 @@ const MesaDetail: React.FC = () => {
             <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mb-4 block">
               Contato
             </a>
-            <div className="flex justify-center mb-4">
-              <img src="/qrcode-dan.png" alt="QR Code" />
-            </div>
             <button
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-transform transform hover:scale-105 shadow-lg"
               onClick={closeModal}
