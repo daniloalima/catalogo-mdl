@@ -10,6 +10,7 @@ const Catalogo: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filtroDia, setFiltroDia] = useState<string>("");
   const [filtroVagas, setFiltroVagas] = useState<string>("");
+  const [filtroEspecial, setFiltroEspecial] = useState<string>("");
   const isAdmin = localStorage.getItem("is_admin") === "true";
   const navigate = useNavigate();
 
@@ -36,10 +37,15 @@ const Catalogo: React.FC = () => {
     setFiltroVagas(e.target.value);
   };
 
+  const handleFiltroEspecialChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFiltroEspecial(e.target.value);
+  };
+
   const mesasFiltradas = mesas.filter((mesa) => {
     return (
       (filtroDia ? mesa.dia === filtroDia : true) &&
-      (filtroVagas === "com-vagas" ? mesa.vagas > 0 : filtroVagas === "sem-vagas" ? mesa.vagas === 0 : true)
+      (filtroVagas === "com-vagas" ? mesa.vagas > 0 : filtroVagas === "sem-vagas" ? mesa.vagas === 0 : true) &&
+      (filtroEspecial === "especial" ? mesa.mesa_especial : filtroEspecial === "nao-especial" ? !mesa.mesa_especial : true)
     );
   });
 
@@ -100,6 +106,18 @@ const Catalogo: React.FC = () => {
               <option value="">Todas as Mesas</option>
               <option value="com-vagas">Com Vagas</option>
               <option value="sem-vagas">Sem Vagas</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-white mb-2">Filtrar por Mesas Especiais:</label>
+            <select
+              value={filtroEspecial}
+              onChange={handleFiltroEspecialChange}
+              className="w-full border border-gray-300 text-black-800 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 bg-custom-gradient"
+            >
+              <option value="">Todas as Mesas</option>
+              <option value="especial">Mesas Especiais</option>
+              <option value="nao-especial">Mesas Normais</option>
             </select>
           </div>
         </div>

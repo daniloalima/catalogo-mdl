@@ -6,6 +6,7 @@ import MesaDetail from './pages/MesaDetails';
 import Catalogo from './pages/Catalogo';
 import Login from './pages/Login';
 import AdicionarMesa from './pages/AdicionarMesa';
+import EditarMesa from './pages/EditarMesa';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <Route path="/catalog" element={<Catalogo />} />
         <Route path="/catalog/add" element={<AdicionarMesa />} />
         <Route path="/mesa/:id" element={<MesaDetail />} />
+        <Route path="/mesa/:id/edit" element={<EditarMesa />} />
       </Routes>
     </Router>
   );

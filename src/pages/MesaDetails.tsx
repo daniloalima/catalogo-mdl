@@ -7,8 +7,10 @@ const MesaDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [mesa, setMesa] = useState<Mesa | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const isAdmin = localStorage.getItem("is_admin") === "true";
+  const whatsappBaseLink = import.meta.env.VITE_WHATSAPP_LINK;
 
   useEffect(() => {
     api.get(`/mesas/${id}`)
@@ -70,6 +72,14 @@ const MesaDetail: React.FC = () => {
     }
   };
 
+  const handleContact = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   if (loading) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-custom-gradient">
@@ -85,6 +95,10 @@ const MesaDetail: React.FC = () => {
       </div>
     );
   }
+
+  const mesaUrl = `${window.location.origin}/mesa/${id}`;
+  const whatsappMessage = `Olá, eu vim do catálogo e tenho interesse na mesa: ${mesa.name}.\n\n${mesaUrl}`;
+  const whatsappLink = `${whatsappBaseLink}${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="w-screen h-screen bg-gray-100 bg-custom-gradient">
@@ -111,10 +125,15 @@ const MesaDetail: React.FC = () => {
           <p className="mb-2 text-gray-700">
             <strong>Horário:</strong> {mesa.horario}
           </p>
+          <p className="mb-2 text-gray-700">
+            <strong>Sessões por mês:</strong> {mesa.sessoes_mes}
+          </p>
+          <p className="mb-2 text-gray-700">
+            <strong>Vagas: </strong> {mesa.vagas}
+          </p>
           {isAdmin && (
             <>
               <div className="mb-2 text-gray-700 flex items-center">
-                <strong>Vagas: </strong> {mesa.vagas}
                 <button
                   className="ml-4 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                   onClick={handleAddVaga}
@@ -128,18 +147,52 @@ const MesaDetail: React.FC = () => {
                   -
                 </button>
               </div>
-              <div className="mt-4">
+              <div className="mt-4 flex space-x-4">
                 <button
-                  className="bg-gray-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-transform transform hover:scale-105 shadow-lg"
                   onClick={handleDeleteMesa}
                 >
-                  🗑️
+                  🗑️ Deletar Mesa
                 </button>
+                <Link
+                  to={`/mesa/${id}/edit`}
+                  className="bg-white-500 border-1 border-red text-black px-4 py-2 rounded hover:bg-white-600 transition-transform transform hover:scale-105 shadow-lg"
+                >
+                  Editar Mesa
+                </Link>
               </div>
             </>
           )}
+          <div className="mt-4 flex space-x-4">
+            <button
+              className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-transform transform hover:scale-105 shadow-lg"
+              onClick={handleContact}
+            >
+              Tenho interesse!
+            </button>
+          </div>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Tenho interesse!</h2>
+            <p className="mb-4 text-gray-700">Clique no link abaixo para conversar com a pessoa que vai te ajudar c:</p>
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mb-4 block">
+              Contato
+            </a>
+            <div className="flex justify-center mb-4">
+              <img src="/qrcode-dan.png" alt="QR Code" />
+            </div>
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-transform transform hover:scale-105 shadow-lg"
+              onClick={closeModal}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
