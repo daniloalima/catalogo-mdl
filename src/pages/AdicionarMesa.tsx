@@ -168,7 +168,8 @@ const AdicionarMesa: React.FC = () => {
               name="descricao"
               value={formData.descricao}
               onChange={handleChange}
-              className="w-full border border-gray-300 text-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full order border-gray-300 text-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={4}
             />
           </div>
           <div className="mb-4">

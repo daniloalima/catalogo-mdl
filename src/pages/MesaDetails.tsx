@@ -101,7 +101,7 @@ const MesaDetail: React.FC = () => {
   const whatsappLink = `${whatsappBaseLink}${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <div className="w-screen h-screen bg-gray-100 bg-custom-gradient">
+    <div className="w-screen min-h-screen bg-gray-100 bg-custom-gradient">
       <div className="container mx-auto py-10">
         <Link to="/catalog" className="text-blue-500 mb-4 inline-block hover:underline">
           ← Voltar
@@ -116,9 +116,12 @@ const MesaDetail: React.FC = () => {
           <p className="mb-2 text-gray-700">
             <strong>Sistema:</strong> {mesa.sistema}
           </p>
-          <p className="mb-2 text-gray-700">
-            <strong>Descrição:</strong> {mesa.descricao}
-          </p>
+          <div className="mb-2 text-gray-700">
+            <strong>Descrição:</strong>
+            {mesa.descricao.split('\n').map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
           <p className="mb-2 text-gray-700">
             <strong>Dia:</strong> {mesa.dia}
           </p>
