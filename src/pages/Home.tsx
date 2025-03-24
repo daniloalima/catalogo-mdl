@@ -37,7 +37,7 @@ const Home: React.FC = () => {
             className="bg-white text-purple-400 px-8 py-4 rounded-lg text-xl font-semibold shadow-md hover:bg-purple-500 transition-colors duration-300"
           >
             <span className="text-black-500 group-hover:text-black">
-              Entrar como Convidado
+              Acesse as mesas com vagas
             </span>
           </button>
         </div>
