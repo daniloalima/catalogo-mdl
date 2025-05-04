@@ -41,13 +41,25 @@ const Catalogo: React.FC = () => {
     setFiltroEspecial(e.target.value);
   };
 
-  const mesasFiltradas = mesas.filter((mesa) => {
-    return (
-      (filtroDia ? mesa.dia === filtroDia : true) &&
-      (filtroVagas === "com-vagas" ? mesa.vagas > 0 : filtroVagas === "sem-vagas" ? mesa.vagas === 0 : true) &&
-      (filtroEspecial === "especial" ? mesa.mesa_especial : filtroEspecial === "nao-especial" ? !mesa.mesa_especial : true)
-    );
-  });
+  const diasDaSemana = [
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado",
+    "Domingo",
+  ];
+
+  const mesasFiltradas = mesas
+    .filter((mesa) => {
+      return (
+        (filtroDia ? mesa.dia === filtroDia : true) &&
+        (filtroVagas === "com-vagas" ? mesa.vagas > 0 : filtroVagas === "sem-vagas" ? mesa.vagas === 0 : true) &&
+        (filtroEspecial === "especial" ? mesa.mesa_especial : filtroEspecial === "nao-especial" ? !mesa.mesa_especial : true)
+      );
+    })
+    .sort((a, b) => diasDaSemana.indexOf(a.dia) - diasDaSemana.indexOf(b.dia));
 
   if (loading) {
     return (

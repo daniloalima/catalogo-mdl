@@ -35,9 +35,13 @@ const MesaCard: React.FC<MesaCardProps> = ({
           alt={`Imagem da mesa ${nome}`}
           className="w-full h-48 object-cover"
         />
-        {vagas <= 0 && (
+        {vagas <= 0 ? (
           <span className="absolute bottom-2 right-2 bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
             SEM VAGAS
+          </span>
+        ) : (
+          <span className="absolute bottom-2 right-2 bg-green-500 text-white px-2 py-1 text-xs font-bold rounded">
+            {vagas} VAGA{vagas > 1 ? "S" : ""}
           </span>
         )}
         <div className="p-4">
