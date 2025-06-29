@@ -131,14 +131,16 @@ const MesaDetail: React.FC = () => {
           <p className="mb-2 text-gray-700">
             <strong>Sessões por mês:</strong> {mesa.sessoes_mes}
           </p>
-          <p className="mb-2 text-gray-700">
-            <strong>Valor:</strong>{" "}
-            {mesa.sessoes_mes === 2
-              ? "R$79,80 mensal"
-              : mesa.sessoes_mes === 4
-              ? "R$159,60 mensal"
-              : "-"}
-          </p>
+          {!mesa.mesa_especial && (
+            <p className="mb-2 text-gray-700">
+              <strong>Valor:</strong>{" "}
+              {mesa.sessoes_mes === 2
+                ? "R$79,80 mensal"
+                : mesa.sessoes_mes === 4
+                ? "R$159,60 mensal"
+                : "-"}
+            </p>
+          )}
           <p className="mb-2 text-gray-700">
             <strong>Vagas: </strong> {mesa.vagas}
           </p>
