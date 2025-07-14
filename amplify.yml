@@ -20,9 +20,6 @@ customHeaders:
       - key: 'Cache-Control'
         value: 'no-cache'
 redirects:
-  - source: '/catalog/'
-    target: '/catalog'
-    status: '301'
   - source: '/<*>'
     target: '/index.html'
     status: '200'
