@@ -1,6 +1,6 @@
 // src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import MesaDetail from './pages/MesaDetails';
 import Catalogo from './pages/Catalogo';
@@ -15,7 +15,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/catalog" element={<Catalogo />} />
-        <Route path="/catalog/" element={<Catalogo />} />
+        <Route path="/catalog/" element={<Navigate to="/catalog" replace />} />
         <Route path="/catalog/add" element={<AdicionarMesa />} />
         <Route path="/mesa/:id" element={<MesaDetail />} />
         <Route path="/mesa/:id/edit" element={<EditarMesa />} />
